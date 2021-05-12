@@ -1,0 +1,6 @@
+SamplingCode/models/*
+!SamplingCode/models/.gitkeep
+SamplingCode/results/*
+!SamplingCode/results/.gitkeep
+MachineLearningCode/Reports/*
+!MachineLearningCode/Reports/.gitkeep

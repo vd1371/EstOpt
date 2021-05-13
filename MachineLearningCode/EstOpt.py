@@ -41,40 +41,43 @@ class EstOpt:
 		self.random_state = params.pop('random_state', 165)
 
 
-	def fit_model(self):
+	def fit_models(self, model_name = 'RF'):
 
 		for i in range (self.output_dim):
 
 			start1 = time.time()
 			Y_train, Y_test = self.Y_train.iloc[:, i], self.Y_test.iloc[:, i]
 
-			model = RandomForestClassifier(n_estimators=self.n_estimators, 
-											max_depth=self.max_depth,
-											min_samples_split=self.min_samples_split, 
-											min_samples_leaf=self.min_samples_leaf,
-											max_features=self.max_features,
-											bootstrap=self.bootstrap,
-											n_jobs=self.n_jobs,
-											verbose=self.verbose,
-											random_state = self.random_state)
+			if model_name == "RF":
+				model = RandomForestClassifier(n_estimators=self.n_estimators, 
+												max_depth=self.max_depth,
+												min_samples_split=self.min_samples_split, 
+												min_samples_leaf=self.min_samples_leaf,
+												max_features=self.max_features,
+												bootstrap=self.bootstrap,
+												n_jobs=self.n_jobs,
+												verbose=self.verbose,
+												random_state = self.random_state)
+				
+
+			elif model_name == "DT":
+				model = DecisionTreeClassifier(max_depth=self.max_depth,
+												min_samples_split=self.min_samples_split, 
+												min_samples_leaf=self.min_samples_leaf,
+												bootstrap=self.bootstrap,
+												n_jobs=self.n_jobs,
+												verbose=self.verbose,
+												random_state = self.random_state)
+			elif model_name == "Logit":
+				model = LogisticRegression(C = 1, fit_intercept = True, penalty= 'l1', solver = 'liblinear')
+
 
 			model.fit(self.X_train.values, Y_train.values)
-			print (f"random forest is fitted")
-
-			start = time.time()
-			model.predict(self.X_train.iloc[:1000])
-			print ("---111---->", f"{time.time()-start:.2f}")
-
-			start = time.time()
-			model.predict(self.X_train.iloc[:50000])
-			print ("---222---->", f"{time.time()-start:.2f}")
-
-
 			evaluate_classification([f'OnTrain-{i}', self.X_train, Y_train, self.indices_train],
 									[f'OnTest-{i}', self.X_test, Y_test, self.indices_test],
 									direc = self.directory,
 									model = model,
-									model_name = f'RF-{i}',
+									model_name = f'{model_name}-{i}',
 									logger = self.log,
 									slicer = 1)
 
@@ -127,7 +130,7 @@ if __name__ == "__main__":
 						split_size =  0.2,
 						should_shuffle =  True,
 						random_state = 165)
-	myanalysis.fit_model()
+	myanalysis.fit_model(model_name = "Logit")
 	# myanalysis.tune_trees()
 
 	

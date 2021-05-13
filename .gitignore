@@ -3,4 +3,6 @@ SamplingCode/models/*
 SamplingCode/results/*
 !SamplingCode/results/.gitkeep
 MachineLearningCode/Reports/*
+MachineLearningCode/__pycache__
+MachineLearningCode/EstOptDNN.py
 !MachineLearningCode/Reports/.gitkeep

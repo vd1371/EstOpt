@@ -275,22 +275,26 @@ class GAOpt:
 			return output
 
 		##TODO: Check the column order and validate with the source files
-		user_costs = self.user_cost_model.predict_on_batch(
-						df.drop(columns = get_cols(df, ['UserCost', 'AgencyCost', 'Utility', 'Obj',
-														'width', 'vertical_clearance', 'design_'])))
 
-		# agency_costs = self.agency_cost_model.predict_on_batch(
-		# 				df.drop(columns = get_cols(df, ['UserCost', 'AgencyCost', 'Utility', 'Obj',
-		# 												'ADT', 'truck_percentage', 'detour_length',
-		# 												'_duration', 'speed_', 'drift',
-		# 												'volatility', 'detour_usage_percentage'])))
+		start = time.time()
+		for _ in range(100):
 
-		utilities = self.utility_model.predict_on_batch(
-						df.drop(columns = get_cols(df, ['UserCost', 'AgencyCost', 'Utility', 'Obj',
+			user_costs = self.user_cost_model(df.drop(columns = get_cols(df, ['UserCost', 'AgencyCost', 'Utility', 'Obj',
+															'width', 'vertical_clearance', 'design_'])), training = False).numpy()
+
+			# agency_costs = self.agency_cost_model(df.drop(columns = get_cols(df, ['UserCost', 'AgencyCost', 'Utility', 'Obj',
+			# 												'ADT', 'truck_percentage', 'detour_length',
+			# 												'_duration', 'speed_', 'drift',
+			# 												'volatility', 'detour_usage_percentage'])), training = False).numpy()
+
+			utilities = self.utility_model(df.drop(columns = get_cols(df, ['UserCost', 'AgencyCost', 'Utility', 'Obj',
 														'length', 'width', 'vertical_clearance',
 														'design_', 'ADT', 'truck_percentage',
 														'_duration', 'speed_', 'drift',
-														'volatility', 'detour_usage_percentage'])))
+														'volatility', 'detour_usage_percentage'])), training = False).numpy()
+
+		print (time.time()-start)
+		input()
 
 		# Finding the objective function (It is currently based on GIAMS example 1)
 		user_costs = user_costs.reshape(-1)

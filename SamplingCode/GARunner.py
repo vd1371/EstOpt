@@ -1,11 +1,26 @@
 import os
-import multiprocessing as mp
+from subprocess import call, Popen, PIPE, STDOUT
+import json
+from _utils import load_indiana_assets
 
-from subprocess import call, Popen
 
-N = mp.cpu_count()
-N = 1
+p = Popen("powershell python GAOpt.py", stdout=PIPE, stdin = PIPE)
 
-for i in range (N):
-	print (i, 'is called')
-	Popen("powershell python GAOpt.py")
+
+assets = load_indiana_assets(4)
+
+
+response = p.communicate(json.dumps(assets).encode('utf-8'))
+
+print (response)
+
+p.stdout.close()
+
+
+print ('Done')
+
+
+
+# for i in range (N):
+# 	print (i, 'is called')
+# 	Popen("powershell python GAOpt.py")

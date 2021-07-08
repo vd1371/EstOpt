@@ -7,12 +7,13 @@ from _utils import load_indiana_assets
 
 def run_indiana():
 
-	n_cores = mp.cpu_count() - 2
+	n_cores = mp.cpu_count() - 10
 
-	assets = load_indiana_assets()
+	assets = load_indiana_assets(2)
 	ids = list(assets.keys())
 	sect_len = int(len(assets) / n_cores) + 1
 
+	pool = []
 	for i in range(n_cores):
 
 		process_assets = {}
@@ -24,14 +25,12 @@ def run_indiana():
 			process_assets[k] = assets[k]
 
 
-		p = Popen("powershell python GAOpt.py", stdout=PIPE, stdin = PIPE)
-		response = p.communicate(json.dumps(process_assets).encode('utf-8'))
-		print (response)
-
-		p.stdout.close()
-
+		p = Popen("powershell python GAOpt.py", stdin = PIPE)
+		p.stdin.write(json.dumps(process_assets).encode('utf-8'))
 
 	print ('Done')
+
+
 
 
 

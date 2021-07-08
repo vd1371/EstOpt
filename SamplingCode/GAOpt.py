@@ -19,7 +19,7 @@ from _utils import *
 # os.environ['KERAS_BACKEND'] = 'theano'
 # reload(K)
 # from keras.models import load_model
-# os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
+os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
 
 RECON = 3
 REHAB = 2
@@ -41,10 +41,10 @@ class GAOpt:
 
 	def load_models(self):
 
-		# import keras
-		# from keras import backend as K
-		# os.environ['KERAS_BACKEND'] = 'theano'
-		# reload(K)
+		import keras
+		from keras import backend as K
+		os.environ['KERAS_BACKEND'] = 'theano'
+		reload(K)
 		from keras.models import load_model
 
 		"""Loading DNN files"""

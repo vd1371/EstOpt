@@ -2,8 +2,8 @@ import os
 import pandas as pd
 
 
-base_directory = 'E://OneDrive - The Hong Kong Polytechnic University//Academics//2018-21-Phd-HKPolyU//Outputs//10- EstOpt//Data'
-
+base_directory = 'E://OneDrive - The Hong Kong Polytechnic University//Academics//2018-21-Phd-HKPU//Outputs//10- EstOpt//Data'
+                
 # E://OneDrive - The Hong Kong Polytechnic University//Academics//2018-21-Phd-HKPolyU//Outputs//10- EstOpt//Data
 
 def combine():

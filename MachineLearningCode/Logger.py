@@ -7,7 +7,7 @@ class Logger(object):
 
 	def __init__(self, logger_name = 'Logger', address = '',
 				 level = logging.DEBUG, console_level = logging.ERROR,
-				 file_level = logging.DEBUG, mode = 'w'):
+				 file_level = logging.DEBUG, mode = 'a'):
 		super(Logger, self).__init__()
 
 		logging.basicConfig()

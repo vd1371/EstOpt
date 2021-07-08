@@ -11,13 +11,16 @@ from ClassificationReport import evaluate_classification
 from Logger import Logger
 
 from sklearn.ensemble import RandomForestClassifier
+from sklearn.linear_model import LogisticRegression
+from sklearn.tree import DecisionTreeClassifier
 from sklearn.model_selection import GridSearchCV
+
+from _Utils import save_model
 
 
 class EstOpt:
 	def __init__(self, **params):
-		self.directory = "Reports/RF/"
-		self.log = Logger(address = f"{self.directory}Log.log")
+		
 		self.set_hyperparamters(**params)
 		dl = EstOptLoader(**params)
 
@@ -41,11 +44,18 @@ class EstOpt:
 		self.random_state = params.pop('random_state', 165)
 
 
-	def fit_models(self, model_name = 'RF'):
+	def fit_model(self, model_name = 'RF', step = None):
+
+		self.directory = f"Reports/{model_name}/"
+		self.log = Logger(address = f"{self.directory}Log.log")
 
 		for i in range (self.output_dim):
 
+			if not step is None:
+				i = step 
+
 			start1 = time.time()
+
 			Y_train, Y_test = self.Y_train.iloc[:, i], self.Y_test.iloc[:, i]
 
 			if model_name == "RF":
@@ -58,18 +68,14 @@ class EstOpt:
 												n_jobs=self.n_jobs,
 												verbose=self.verbose,
 												random_state = self.random_state)
-				
 
 			elif model_name == "DT":
 				model = DecisionTreeClassifier(max_depth=self.max_depth,
 												min_samples_split=self.min_samples_split, 
 												min_samples_leaf=self.min_samples_leaf,
-												bootstrap=self.bootstrap,
-												n_jobs=self.n_jobs,
-												verbose=self.verbose,
 												random_state = self.random_state)
 			elif model_name == "Logit":
-				model = LogisticRegression(C = 1, fit_intercept = True, penalty= 'l1', solver = 'liblinear')
+				model = LogisticRegression(C = 100, fit_intercept = True, penalty= 'l2', solver = 'liblinear')
 
 
 			model.fit(self.X_train.values, Y_train.values)
@@ -81,7 +87,12 @@ class EstOpt:
 									logger = self.log,
 									slicer = 1)
 
-			print ("------->", f"{time.time()-start1:.2f}")
+			save_model(model, self.directory, f"{model_name}-{i}")
+
+			print ("------->", f"Step:{i} done in {time.time()-start1:.2f}")
+
+			if not step is None:
+				break
 
 	
 	def tune_trees(self):
@@ -109,8 +120,6 @@ class EstOpt:
 				n_jobs = self.n_jobs
 				)
 
-
-
 		search_models.fit(self.X_train, self.Y_train.iloc[:, 0])
 		 
 		self.log.info(f"\n\nBest params:\n{pprint.pformat(search_models.best_params_)}\n")
@@ -126,11 +135,12 @@ if __name__ == "__main__":
 						max_features = 'auto',
 						min_samples_split = 2,
 						min_samples_leaf = 1,
-						n_jobs = -1,
+						n_jobs = 3,
 						split_size =  0.2,
 						should_shuffle =  True,
 						random_state = 165)
-	myanalysis.fit_model(model_name = "Logit")
+
+	myanalysis.fit_model(model_name = "RF", step = 16)
 	# myanalysis.tune_trees()
 
 	

@@ -140,7 +140,7 @@ if __name__ == "__main__":
 						should_shuffle =  True,
 						random_state = 165)
 
-	myanalysis.fit_model(model_name = "RF", step = 16)
+	myanalysis.fit_model(model_name = "RF", step = 6)
 	# myanalysis.tune_trees()
 
 	

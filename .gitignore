@@ -6,3 +6,5 @@ MachineLearningCode/Reports/*
 MachineLearningCode/__pycache__
 MachineLearningCode/EstOptDNN.py
 !MachineLearningCode/Reports/.gitkeep
+*.xlsx
+Log.Log
